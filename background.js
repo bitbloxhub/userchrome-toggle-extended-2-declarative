@@ -73,6 +73,21 @@ async function initSettings() {
 		console.log('Removed session toggles!')
 	}
 
+	if (typeof(browser.storage.managed) === 'object') {
+		try {
+			const managedSettings = await browser.storage.managed.get(null);
+			if (managedSettings) {
+				settings = {
+					...defaultSettings,
+					...managedSettings,
+				};
+				await browser.storage.local.set(settings);
+			}
+		} catch (err) {
+			console.error(`page.initSettings: ${err}`);
+		}
+	}
+
 	console.log('Settings initialized!');
 }
 
